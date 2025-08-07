@@ -111,31 +111,39 @@ function move(direction) {
   }
 }
 
-// ✅ 手機觸控滑動
-let touchStartX, touchStartY;
+// ✅ 手機觸控滑動偵測（支援上下左右）
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
 
 document.addEventListener('touchstart', (e) => {
-  const touch = e.touches[0];
-  touchStartX = touch.clientX;
-  touchStartY = touch.clientY;
-});
+  if (e.touches.length > 0) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+}, { passive: true });
 
 document.addEventListener('touchend', (e) => {
-  const touch = e.changedTouches[0];
-  const dx = touch.clientX - touchStartX;
-  const dy = touch.clientY - touchStartY;
+  if (e.changedTouches.length > 0) {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
 
-  if (Math.abs(dx) > Math.abs(dy)) {
-    if (dx > 30) move('right');
-    else if (dx < -30) move('left');
-  } else {
-    if (dy > 30) move('down');
-    else if (dy < -30) move('up');
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    const threshold = 30;
+
+    if (absDx > absDy && absDx > threshold) {
+      if (dx > 0) move('right');
+      else move('left');
+    } else if (absDy > threshold) {
+      if (dy > 0) move('down');
+      else move('up');
+    }
   }
 });
-
-// ✅ 不需要鍵盤控制了
-// document.addEventListener('keydown', (e) => { ... });
-
+  
 createBoard();
 initBoard();

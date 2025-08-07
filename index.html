@@ -10,18 +10,21 @@
 
   <div><strong>分數：</strong><span id="score">0</span></div>
 
-  <!-- 新增：操作按鈕（電腦也可用） -->
+  <div id="game-container"></div>
+
+  <!-- ✅ 移動控制按鈕放到底部 -->
   <div id="controls">
-    <button onclick="move('up')">↑</button>
-    <div>
+    <div class="row">
+      <button onclick="move('up')">↑</button>
+    </div>
+    <div class="row">
       <button onclick="move('left')">←</button>
       <button onclick="move('down')">↓</button>
       <button onclick="move('right')">→</button>
     </div>
   </div>
 
-  <div id="game-container"></div>
-  <p>滑動或點擊按鈕來移動方塊</p>
+  <p>手機滑動或點擊按鈕來操作</p>
 
   <script src="script.js"></script>
 </body>
