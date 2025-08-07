@@ -25,13 +25,12 @@ function drawBoard() {
       tile.appendChild(img);
     }
   }
-  // 新增：更新分數
   document.getElementById('score').textContent = score;
 }
 
 function initBoard() {
   board = Array(size).fill().map(() => Array(size).fill(0));
-  score = 0; // 分數歸零
+  score = 0;
   addRandomTile();
   addRandomTile();
   drawBoard();
@@ -67,7 +66,7 @@ function moveLeft() {
     for (let i = 0; i < newRow.length - 1; i++) {
       if (newRow[i] === newRow[i + 1]) {
         newRow[i] *= 2;
-        score += newRow[i]; // ➜ 新增：加分數
+        score += newRow[i];
         newRow[i + 1] = 0;
         moved = true;
       }
@@ -85,28 +84,24 @@ function moveLeft() {
 }
 
 function move(direction) {
-  let rotated = false;
+  let moved = false;
   if (direction === 'up') {
     board = rotateMatrix(board);
-    rotated = true;
+    moved = moveLeft();
+    board = rotateMatrix(board);
+    board = rotateMatrix(board);
+    board = rotateMatrix(board);
   } else if (direction === 'down') {
     board = rotateMatrix(board);
     board = rotateMatrix(board);
     board = rotateMatrix(board);
-    rotated = true;
+    moved = moveLeft();
+    board = rotateMatrix(board);
+  } else if (direction === 'left') {
+    moved = moveLeft();
   } else if (direction === 'right') {
     board = board.map(row => row.reverse());
-  }
-
-  const moved = moveLeft();
-
-  if (direction === 'up') {
-    board = rotateMatrix(board);
-    board = rotateMatrix(board);
-    board = rotateMatrix(board);
-  } else if (direction === 'down') {
-    board = rotateMatrix(board);
-  } else if (direction === 'right') {
+    moved = moveLeft();
     board = board.map(row => row.reverse());
   }
 
@@ -116,12 +111,31 @@ function move(direction) {
   }
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp') move('up');
-  if (e.key === 'ArrowDown') move('down');
-  if (e.key === 'ArrowLeft') move('left');
-  if (e.key === 'ArrowRight') move('right');
+// ✅ 手機觸控滑動
+let touchStartX, touchStartY;
+
+document.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
 });
+
+document.addEventListener('touchend', (e) => {
+  const touch = e.changedTouches[0];
+  const dx = touch.clientX - touchStartX;
+  const dy = touch.clientY - touchStartY;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 30) move('right');
+    else if (dx < -30) move('left');
+  } else {
+    if (dy > 30) move('down');
+    else if (dy < -30) move('up');
+  }
+});
+
+// ✅ 不需要鍵盤控制了
+// document.addEventListener('keydown', (e) => { ... });
 
 createBoard();
 initBoard();

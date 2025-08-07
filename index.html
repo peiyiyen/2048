@@ -7,14 +7,21 @@
 </head>
 <body>
   <h1>2048 圖片版</h1>
-  
-  <!-- 新增：分數欄位 -->
-  <div>
-    <strong>分數：</strong><span id="score">0</span>
+
+  <div><strong>分數：</strong><span id="score">0</span></div>
+
+  <!-- 新增：操作按鈕（電腦也可用） -->
+  <div id="controls">
+    <button onclick="move('up')">↑</button>
+    <div>
+      <button onclick="move('left')">←</button>
+      <button onclick="move('down')">↓</button>
+      <button onclick="move('right')">→</button>
+    </div>
   </div>
 
   <div id="game-container"></div>
-  <p>使用鍵盤方向鍵移動</p>
+  <p>滑動或點擊按鈕來移動方塊</p>
 
   <script src="script.js"></script>
 </body>
